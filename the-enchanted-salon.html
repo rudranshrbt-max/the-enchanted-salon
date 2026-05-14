@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Enchanted Salon | Premium Hair & Beauty | Bhopal</title>
+<meta name="description" content="The Enchanted Salon - Bhopal's premier luxury hair salon. Expert stylists, exclusive treatments, and an unforgettable experience. Book your appointment now.">
+<meta name="keywords" content="hair salon Bhopal, luxury salon Bhopal, hair treatment Bhopal, best salon Bhopal, Indrapuri salon">
+<meta property="og:title" content="The Enchanted Salon | Bhopal's Premier Luxury Hair Salon">
+<meta property="og:description" content="Experience the art of beauty transformation at The Enchanted Salon. Book your appointment today.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root {
+  --gold: #C9A96E;
+  --gold-light: #E8D5A8;
+  --gold-dark: #8B6914;
+  --obsidian: #0A0A0A;
+  --obsidian-mid: #111111;
+  --obsidian-soft: #1A1A1A;
+  --cream: #F5F0E8;
+  --cream-dark: #EDE5D5;
+  --text-light: #F0EAE0;
+  --text-muted: #9A8F82;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--obsidian);
+  color: var(--text-light);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor-dot {
+  position: fixed; width: 6px; height: 6px;
+  background: var(--gold); border-radius: 50%;
+  pointer-events: none; z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.05s;
+}
+.cursor-ring {
+  position: fixed; width: 40px; height: 40px;
+  border: 1px solid rgba(201,169,110,0.6); border-radius: 50%;
+  pointer-events: none; z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo), opacity 0.3s, border-color 0.3s;
+}
+.cursor-ring.hover { width: 64px; height: 64px; opacity: 0.5; }
+
+/* SCROLL PROGRESS */
+.scroll-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  z-index: 10000; width: 0%; transition: width 0.1s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
+  padding: 1.5rem 4rem;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.5s var(--ease-out-expo);
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(20px);
+  padding: 1rem 4rem;
+  border-bottom: 1px solid rgba(201,169,110,0.15);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 400; letter-spacing: 0.15em;
+  color: var(--gold); text-decoration: none;
+}
+.nav-logo span { font-style: italic; }
+.nav-links {
+  display: flex; gap: 2.5rem; list-style: none;
+}
+.nav-links a {
+  font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-muted); text-decoration: none;
+  transition: color 0.3s; font-weight: 500;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  background: transparent; border: 1px solid var(--gold);
+  color: var(--gold); padding: 0.7rem 1.8rem;
+  cursor: pointer; font-family: 'Jost', sans-serif;
+  transition: all 0.4s var(--ease-out-expo);
+  font-weight: 500;
+}
+.nav-cta:hover { background: var(--gold); color: var(--obsidian); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px;
+}
+.hamburger span {
+  width: 24px; height: 1px;
+  background: var(--gold); transition: all 0.3s;
+}
+
+/* HERO */
+#hero {
+  position: relative; height: 100vh; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+#three-canvas {
+  position: absolute; inset: 0; z-index: 0;
+}
+.hero-content {
+  position: relative; z-index: 2; text-align: center;
+  padding: 0 2rem;
+}
+.hero-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  opacity: 0; animation: fadeRise 1s 0.3s var(--ease-out-expo) forwards;
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 300; line-height: 0.9;
+  color: var(--cream);
+  opacity: 0; animation: fadeRise 1s 0.5s var(--ease-out-expo) forwards;
+}
+.hero-title em {
+  font-style: italic; color: var(--gold);
+  display: block;
+}
+.hero-sub {
+  font-size: 0.85rem; letter-spacing: 0.15em;
+  color: var(--text-muted); margin-top: 2rem;
+  text-transform: uppercase;
+  opacity: 0; animation: fadeRise 1s 0.7s var(--ease-out-expo) forwards;
+}
+.hero-actions {
+  display: flex; gap: 1.2rem; justify-content: center;
+  margin-top: 3rem;
+  opacity: 0; animation: fadeRise 1s 0.9s var(--ease-out-expo) forwards;
+}
+.btn-primary {
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  background: var(--gold); color: var(--obsidian);
+  border: none; padding: 1rem 2.5rem;
+  cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 600;
+  transition: all 0.4s var(--ease-out-expo);
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+.btn-outline {
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  background: transparent; color: var(--cream);
+  border: 1px solid rgba(245,240,232,0.3); padding: 1rem 2.5rem;
+  cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 500;
+  transition: all 0.4s var(--ease-out-expo); text-decoration: none;
+  display: inline-flex; align-items: center;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.hero-scroll {
+  position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+  opacity: 0; animation: fadeRise 1s 1.2s var(--ease-out-expo) forwards;
+}
+.hero-scroll span {
+  font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted);
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.7); opacity: 0.5; }
+}
+
+/* MARQUEE */
+.marquee-section {
+  background: var(--gold);
+  padding: 1rem 0; overflow: hidden;
+}
+.marquee-track {
+  display: flex; gap: 3rem;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+.marquee-track span {
+  font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--obsidian); font-weight: 600; flex-shrink: 0;
+}
+.marquee-dot { color: var(--obsidian-mid) !important; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* SECTIONS SHARED */
+section { padding: 7rem 4rem; }
+.section-label {
+  font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 300; line-height: 1.1; color: var(--cream);
+}
+.section-title em { font-style: italic; color: var(--gold); }
+
+/* ABOUT */
+#about { background: var(--obsidian-soft); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+  align-items: center; margin-top: 4rem;
+}
+.about-visual {
+  position: relative; aspect-ratio: 3/4;
+  background: var(--obsidian-mid);
+  overflow: hidden;
+}
+.about-img-placeholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2015 50%, #1a1a1a 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.about-img-placeholder svg { width: 80px; opacity: 0.3; }
+.about-frame {
+  position: absolute; inset: -1.5rem; border: 1px solid rgba(201,169,110,0.2);
+  pointer-events: none;
+}
+.about-frame-corner {
+  position: absolute; width: 30px; height: 30px;
+  border-color: var(--gold); border-style: solid;
+}
+.about-frame-corner.tl { top: 1.5rem; left: 1.5rem; border-width: 1px 0 0 1px; }
+.about-frame-corner.tr { top: 1.5rem; right: 1.5rem; border-width: 1px 1px 0 0; }
+.about-frame-corner.bl { bottom: 1.5rem; left: 1.5rem; border-width: 0 0 1px 1px; }
+.about-frame-corner.br { bottom: 1.5rem; right: 1.5rem; border-width: 0 1px 1px 0; }
+.about-text p {
+  font-size: 1rem; line-height: 1.9; color: var(--text-muted); margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+.about-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem;
+  padding-top: 3rem; border-top: 1px solid rgba(201,169,110,0.15);
+}
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem; font-weight: 300; color: var(--gold); display: block;
+}
+.stat-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+
+/* SERVICES */
+#services { background: var(--obsidian); }
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  margin-top: 4rem;
+}
+.service-card {
+  position: relative; padding: 3rem 2.5rem;
+  background: var(--obsidian-soft);
+  border: 1px solid rgba(201,169,110,0.08);
+  overflow: hidden;
+  transition: all 0.5s var(--ease-out-expo);
+}
+.service-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: scaleX(0); transition: transform 0.5s var(--ease-out-expo);
+}
+.service-card:hover { background: var(--obsidian-mid); border-color: rgba(201,169,110,0.25); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon {
+  font-size: 2rem; margin-bottom: 1.5rem; display: block;
+  color: var(--gold); opacity: 0.8;
+}
+.service-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 400; color: var(--cream); margin-bottom: 0.8rem;
+}
+.service-desc {
+  font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem;
+}
+.service-price {
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); border-top: 1px solid rgba(201,169,110,0.2);
+  padding-top: 1.2rem; margin-top: 1.2rem;
+}
+
+/* TESTIMONIALS */
+#testimonials { background: var(--obsidian-soft); }
+.testimonials-wrapper {
+  margin-top: 4rem; position: relative;
+}
+.testimonials-track {
+  display: flex; gap: 2rem; overflow-x: auto;
+  scroll-snap-type: x mandatory; scrollbar-width: none;
+  padding-bottom: 2rem;
+}
+.testimonials-track::-webkit-scrollbar { display: none; }
+.testimonial-card {
+  min-width: 380px; padding: 3rem;
+  background: var(--obsidian);
+  border: 1px solid rgba(201,169,110,0.1);
+  scroll-snap-align: start; flex-shrink: 0;
+  position: relative;
+}
+.testimonial-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4rem; color: var(--gold); opacity: 0.3;
+  line-height: 1; margin-bottom: -0.5rem;
+}
+.testimonial-text {
+  font-size: 0.95rem; line-height: 1.9; color: var(--text-muted);
+  font-style: italic; margin-bottom: 2rem;
+}
+.testimonial-author {
+  display: flex; align-items: center; gap: 1rem;
+}
+.author-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 600; color: var(--obsidian);
+  font-family: 'Cormorant Garamond', serif;
+}
+.author-name {
+  font-size: 0.8rem; font-weight: 600; color: var(--cream); letter-spacing: 0.05em;
+}
+.author-role { font-size: 0.7rem; color: var(--text-muted); }
+.stars { color: var(--gold); font-size: 0.7rem; margin-top: 0.3rem; letter-spacing: 0.1em; }
+
+/* BOOKING */
+#booking { background: var(--obsidian); }
+.booking-container {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem;
+  margin-top: 4rem; align-items: start;
+}
+.booking-info h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; font-weight: 400; color: var(--cream); margin-bottom: 1rem;
+}
+.booking-info p { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 2rem; }
+.booking-feature {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 0; border-bottom: 1px solid rgba(201,169,110,0.1);
+}
+.booking-feature-icon { color: var(--gold); font-size: 1.2rem; flex-shrink: 0; }
+.booking-feature-text { font-size: 0.8rem; color: var(--text-muted); }
+
+.booking-form {
+  background: var(--obsidian-soft);
+  border: 1px solid rgba(201,169,110,0.12);
+  padding: 3rem;
+}
+.form-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; font-weight: 400; color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+.form-sub { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2rem; letter-spacing: 0.05em; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block; font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; background: var(--obsidian);
+  border: 1px solid rgba(201,169,110,0.15);
+  color: var(--text-light); padding: 0.9rem 1rem;
+  font-family: 'Jost', sans-serif; font-size: 0.85rem;
+  outline: none; transition: border-color 0.3s;
+  -webkit-appearance: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--gold); }
+.form-group select option { background: var(--obsidian); }
+.time-slots {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.time-slot {
+  padding: 0.6rem 0.4rem; text-align: center;
+  background: var(--obsidian);
+  border: 1px solid rgba(201,169,110,0.1);
+  font-size: 0.7rem; cursor: pointer; color: var(--text-muted);
+  transition: all 0.3s; user-select: none;
+}
+.time-slot:hover:not(.booked) { border-color: var(--gold); color: var(--gold); }
+.time-slot.selected { background: var(--gold); color: var(--obsidian); border-color: var(--gold); font-weight: 600; }
+.time-slot.booked { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+.time-slot-label {
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.5rem;
+}
+.btn-book {
+  width: 100%; padding: 1.1rem; background: var(--gold);
+  border: none; color: var(--obsidian); font-family: 'Jost', sans-serif;
+  font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+  font-weight: 600; cursor: pointer; margin-top: 1rem;
+  transition: all 0.4s var(--ease-out-expo);
+}
+.btn-book:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+/* CONFIRMATION MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  z-index: 99990; display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(10px);
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: var(--obsidian-soft);
+  border: 1px solid rgba(201,169,110,0.3);
+  padding: 4rem; max-width: 500px; width: 90%; text-align: center;
+  animation: popIn 0.5s var(--ease-spring) forwards;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.modal-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+.modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; color: var(--gold); margin-bottom: 1rem;
+}
+.modal-text { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); }
+.modal-close {
+  margin-top: 2rem; padding: 0.8rem 2rem;
+  background: transparent; border: 1px solid var(--gold);
+  color: var(--gold); font-family: 'Jost', sans-serif;
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.3s;
+}
+.modal-close:hover { background: var(--gold); color: var(--obsidian); }
+
+/* AI CHAT / ASSISTANT */
+.ai-chat-bubble {
+  position: fixed; bottom: 6.5rem; right: 2rem; z-index: 8000;
+}
+.ai-chat-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a1a1a, #2d2010);
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.4rem;
+  box-shadow: 0 0 30px rgba(201,169,110,0.2);
+  transition: all 0.3s;
+}
+.ai-chat-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(201,169,110,0.4); }
+.ai-chat-panel {
+  position: absolute; bottom: 75px; right: 0;
+  width: 340px; background: var(--obsidian-soft);
+  border: 1px solid rgba(201,169,110,0.2);
+  display: none; flex-direction: column;
+  max-height: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.ai-chat-panel.open { display: flex; }
+.ai-chat-header {
+  background: linear-gradient(135deg, var(--obsidian), #1c1508);
+  padding: 1rem 1.2rem;
+  display: flex; align-items: center; gap: 0.8rem;
+  border-bottom: 1px solid rgba(201,169,110,0.15);
+}
+.ai-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
+.ai-name { font-size: 0.85rem; font-weight: 600; color: var(--cream); }
+.ai-status { font-size: 0.65rem; color: #4ade80; }
+.ai-messages {
+  flex: 1; overflow-y: auto; padding: 1rem; display: flex;
+  flex-direction: column; gap: 0.8rem; min-height: 200px;
+}
+.ai-messages::-webkit-scrollbar { width: 3px; }
+.ai-messages::-webkit-scrollbar-thumb { background: var(--gold); opacity: 0.3; }
+.msg { max-width: 80%; padding: 0.7rem 1rem; font-size: 0.8rem; line-height: 1.6; }
+.msg.bot { background: var(--obsidian); border: 1px solid rgba(201,169,110,0.1); color: var(--text-muted); align-self: flex-start; }
+.msg.user { background: var(--gold); color: var(--obsidian); align-self: flex-end; font-weight: 500; }
+.ai-input-row {
+  display: flex; border-top: 1px solid rgba(201,169,110,0.1); padding: 0.8rem;
+  gap: 0.5rem;
+}
+.ai-input {
+  flex: 1; background: var(--obsidian); border: 1px solid rgba(201,169,110,0.15);
+  color: var(--text-light); padding: 0.6rem 0.8rem; font-family: 'Jost', sans-serif;
+  font-size: 0.8rem; outline: none;
+}
+.ai-send {
+  background: var(--gold); border: none; color: var(--obsidian);
+  padding: 0.6rem 1rem; cursor: pointer; font-size: 0.8rem;
+  font-family: 'Jost', sans-serif; font-weight: 600; transition: background 0.3s;
+}
+.ai-send:hover { background: var(--gold-light); }
+.ai-quick-btns {
+  display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(201,169,110,0.08);
+}
+.ai-quick-btn {
+  font-size: 0.65rem; padding: 0.3rem 0.7rem;
+  background: transparent; border: 1px solid rgba(201,169,110,0.2);
+  color: var(--gold); cursor: pointer; font-family: 'Jost', sans-serif;
+  transition: all 0.2s; white-space: nowrap;
+}
+.ai-quick-btn:hover { background: rgba(201,169,110,0.1); }
+
+/* WHATSAPP */
+.whatsapp-btn {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 8000;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: #25D366;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; font-size: 1.6rem;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+  transition: all 0.3s;
+}
+.whatsapp-btn:hover { transform: scale(1.08); box-shadow: 0 8px 30px rgba(37,211,102,0.4); }
+
+/* CALL BTN FLOATING */
+.call-float {
+  position: fixed; bottom: 2rem; left: 2rem; z-index: 8000;
+  display: flex; align-items: center; gap: 0.8rem;
+  background: var(--obsidian-soft); border: 1px solid var(--gold);
+  padding: 0.8rem 1.4rem; text-decoration: none;
+  transition: all 0.3s;
+}
+.call-float:hover { background: var(--gold); }
+.call-float:hover .call-text { color: var(--obsidian); }
+.call-text { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--gold); font-weight: 500; }
+
+/* CONTACT */
+#contact { background: var(--obsidian-soft); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 4rem; }
+.contact-info-item {
+  display: flex; gap: 1.5rem; padding: 2rem 0;
+  border-bottom: 1px solid rgba(201,169,110,0.1);
+}
+.contact-icon { font-size: 1.5rem; color: var(--gold); flex-shrink: 0; margin-top: 0.2rem; }
+.contact-label {
+  font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.5rem;
+}
+.contact-value { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+.contact-value a { color: var(--cream); text-decoration: none; transition: color 0.3s; }
+.contact-value a:hover { color: var(--gold); }
+.map-embed {
+  border: 1px solid rgba(201,169,110,0.15); overflow: hidden;
+  height: 380px;
+}
+.map-embed iframe { width: 100%; height: 100%; border: none; filter: grayscale(50%) invert(10%); }
+.contact-actions {
+  display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;
+}
+.btn-action {
+  flex: 1; min-width: 120px; padding: 1rem;
+  background: transparent; border: 1px solid rgba(201,169,110,0.2);
+  color: var(--cream); font-family: 'Jost', sans-serif;
+  font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; text-align: center; text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  transition: all 0.3s;
+}
+.btn-action:hover { background: var(--gold); color: var(--obsidian); border-color: var(--gold); }
+
+/* ADMIN DASHBOARD */
+#admin-panel {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+  z-index: 99991; display: none; overflow-y: auto;
+  backdrop-filter: blur(15px);
+}
+#admin-panel.open { display: block; }
+.admin-inner { max-width: 900px; margin: 4rem auto; padding: 0 2rem; }
+.admin-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 2rem 0; border-bottom: 1px solid rgba(201,169,110,0.2); margin-bottom: 2rem;
+}
+.admin-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; color: var(--gold);
+}
+.admin-close {
+  background: transparent; border: 1px solid rgba(201,169,110,0.3);
+  color: var(--gold); padding: 0.6rem 1.2rem; cursor: pointer;
+  font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.bookings-table { width: 100%; border-collapse: collapse; }
+.bookings-table th {
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); text-align: left; padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(201,169,110,0.2);
+}
+.bookings-table td {
+  font-size: 0.8rem; color: var(--text-muted); padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.bookings-table tr:hover td { background: rgba(201,169,110,0.05); }
+.status-badge {
+  font-size: 0.6rem; padding: 0.2rem 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.status-badge.confirmed { background: rgba(74,222,128,0.15); color: #4ade80; }
+.status-badge.pending { background: rgba(201,169,110,0.15); color: var(--gold); }
+.admin-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;
+}
+.admin-stat {
+  background: var(--obsidian-soft); padding: 1.5rem;
+  border: 1px solid rgba(201,169,110,0.1);
+}
+.admin-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem; color: var(--gold);
+}
+.admin-stat-label { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; }
+
+/* FOOTER */
+footer {
+  background: var(--obsidian-mid);
+  border-top: 1px solid rgba(201,169,110,0.1);
+  padding: 4rem;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; font-weight: 300; color: var(--gold); margin-bottom: 1rem;
+}
+.footer-brand-name em { font-style: italic; }
+.footer-desc { font-size: 0.8rem; line-height: 1.8; color: var(--text-muted); max-width: 260px; }
+.footer-social {
+  display: flex; gap: 1rem; margin-top: 1.5rem;
+}
+.social-link {
+  width: 36px; height: 36px; border: 1px solid rgba(201,169,110,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); text-decoration: none; font-size: 0.8rem;
+  transition: all 0.3s;
+}
+.social-link:hover { border-color: var(--gold); color: var(--gold); }
+.footer-col h4 {
+  font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+}
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 0.7rem; }
+.footer-links a {
+  font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--cream); }
+.footer-bottom {
+  border-top: 1px solid rgba(201,169,110,0.1);
+  padding-top: 2rem; display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.footer-bottom-text { font-size: 0.7rem; color: var(--text-muted); }
+.admin-trigger {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(201,169,110,0.3); background: transparent; border: none;
+  cursor: pointer; font-family: 'Jost', sans-serif; transition: color 0.3s;
+}
+.admin-trigger:hover { color: var(--gold); }
+
+/* ANIMATIONS */
+@keyframes fadeRise {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* MOBILE NAV */
+.mobile-menu {
+  position: fixed; inset: 0; background: var(--obsidian);
+  z-index: 8990; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2.5rem;
+  transform: translateX(100%); transition: transform 0.5s var(--ease-out-expo);
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu a {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem; font-weight: 300; color: var(--cream);
+  text-decoration: none; transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--gold); }
+
+/* MEDIA QUERIES */
+@media (max-width: 900px) {
+  section { padding: 5rem 2rem; }
+  nav { padding: 1.2rem 2rem; }
+  nav.scrolled { padding: 0.9rem 2rem; }
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .booking-container { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .time-slots { grid-template-columns: repeat(3, 1fr); }
+  .about-stats { grid-template-columns: repeat(2, 1fr); }
+  body { cursor: auto; }
+  .cursor-dot, .cursor-ring { display: none; }
+  .admin-stats { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .hero-actions { flex-direction: column; align-items: center; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .ai-chat-panel { width: 300px; }
+  .time-slots { grid-template-columns: repeat(2, 1fr); }
+  .contact-actions { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div class="scroll-bar" id="scrollBar"></div>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">The <span>Enchanted</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#booking">Booking</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="scrollToBooking()">Book Now</button>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMobileMenu()">About</a>
+  <a href="#services" onclick="toggleMobileMenu()">Services</a>
+  <a href="#testimonials" onclick="toggleMobileMenu()">Reviews</a>
+  <a href="#booking" onclick="toggleMobileMenu()">Booking</a>
+  <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-content">
+    <p class="hero-eyebrow">★ Bhopal's Premier Luxury Hair Salon ★</p>
+    <h1 class="hero-title">
+      The<br>
+      <em>Enchanted</em>
+    </h1>
+    <p class="hero-sub">Where Beauty Becomes Art</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollToBooking()">Book Your Experience</button>
+      <a href="tel:07415028439" class="btn-outline">Call Now</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Hair Coloring</span><span class="marquee-dot">✦</span>
+    <span>Luxury Treatments</span><span class="marquee-dot">✦</span>
+    <span>Bridal Packages</span><span class="marquee-dot">✦</span>
+    <span>Keratin Therapy</span><span class="marquee-dot">✦</span>
+    <span>Expert Styling</span><span class="marquee-dot">✦</span>
+    <span>Scalp Care</span><span class="marquee-dot">✦</span>
+    <span>Hair Extensions</span><span class="marquee-dot">✦</span>
+    <span>Premium Products</span><span class="marquee-dot">✦</span>
+    <span>Hair Coloring</span><span class="marquee-dot">✦</span>
+    <span>Luxury Treatments</span><span class="marquee-dot">✦</span>
+    <span>Bridal Packages</span><span class="marquee-dot">✦</span>
+    <span>Keratin Therapy</span><span class="marquee-dot">✦</span>
+    <span>Expert Styling</span><span class="marquee-dot">✦</span>
+    <span>Scalp Care</span><span class="marquee-dot">✦</span>
+    <span>Hair Extensions</span><span class="marquee-dot">✦</span>
+    <span>Premium Products</span><span class="marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label reveal">Our Story</div>
+  <h2 class="section-title reveal reveal-delay-1">Crafting beauty<br>with <em>intention</em></h2>
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-img-placeholder">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 8C40 8 20 20 20 40C20 60 40 72 40 72C40 72 60 60 60 40C60 20 40 8 40 8Z" stroke="#C9A96E" stroke-width="1.5"/>
+          <circle cx="40" cy="40" r="10" stroke="#C9A96E" stroke-width="1.5"/>
+          <path d="M40 20V30M40 50V60M20 40H30M50 40H60" stroke="#C9A96E" stroke-width="1" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="about-frame">
+        <div class="about-frame-corner tl"></div>
+        <div class="about-frame-corner tr"></div>
+        <div class="about-frame-corner bl"></div>
+        <div class="about-frame-corner br"></div>
+      </div>
+    </div>
+    <div class="about-text reveal reveal-delay-2">
+      <p>Nestled in the heart of Indrapuri, Bhopal, The Enchanted Salon was born from a singular vision: to create a sanctuary where every client is treated as royalty, and every visit is a transformative ritual.</p>
+      <p>Our master stylists bring decades of combined expertise, trained in international techniques and fueled by an unwavering passion for the craft. We believe that great hair is not just cut and colored — it is sculpted, envisioned, and brought to life with artistry.</p>
+      <p>From the moment you step inside, the pressures of the outside world dissolve. You enter an atmosphere of calm luxury, premium aromas, and total dedication to your beauty journey.</p>
+      <div class="about-stats">
+        <div>
+          <span class="stat-num">500+</span>
+          <span class="stat-label">Happy Clients</span>
+        </div>
+        <div>
+          <span class="stat-num">8+</span>
+          <span class="stat-label">Years Excellence</span>
+        </div>
+        <div>
+          <span class="stat-num">15+</span>
+          <span class="stat-label">Services Offered</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label reveal">What We Offer</div>
+  <h2 class="section-title reveal reveal-delay-1">Services crafted<br>for <em>every desire</em></h2>
+  <div class="services-grid" style="margin-top:4rem">
+    <div class="service-card reveal">
+      <span class="service-icon">✂</span>
+      <h3 class="service-name">Precision Cuts</h3>
+      <p class="service-desc">Architectural haircuts tailored to your face structure, lifestyle, and personality. Our stylists consult, conceptualize, and create — never just cut.</p>
+      <div class="service-price">From ₹400 · 45–60 min</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <span class="service-icon">◈</span>
+      <h3 class="service-name">Color Artistry</h3>
+      <p class="service-desc">Balayage, ombré, highlights, global color — executed with precision using premium professional color lines. Bespoke shades crafted exclusively for you.</p>
+      <div class="service-price">From ₹1,200 · 90–180 min</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <span class="service-icon">◇</span>
+      <h3 class="service-name">Keratin & Smoothing</h3>
+      <p class="service-desc">Banish frizz for months with our professional keratin treatments. Silky, manageable, radiant hair that transforms your morning routine.</p>
+      <div class="service-price">From ₹3,500 · 2–3 hrs</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">✦</span>
+      <h3 class="service-name">Bridal & Event</h3>
+      <p class="service-desc">Your most important moments deserve the finest craft. Complete bridal packages including trials, hair artistry, and on-day styling for timeless photographs.</p>
+      <div class="service-price">From ₹5,000 · Custom</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <span class="service-icon">◉</span>
+      <h3 class="service-name">Scalp Rituals</h3>
+      <p class="service-desc">Deep conditioning, scalp massage therapies, and nourishing treatments that restore health, stimulate growth, and leave your hair luminously strong.</p>
+      <div class="service-price">From ₹800 · 60 min</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <span class="service-icon">⊕</span>
+      <h3 class="service-name">Hair Extensions</h3>
+      <p class="service-desc">Add length, volume, and dimension with premium Remy hair extensions. Natural-looking, expertly blended, and lovingly maintained by our specialists.</p>
+      <div class="service-price">From ₹6,000 · Consultation</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-label reveal">Client Stories</div>
+  <h2 class="section-title reveal reveal-delay-1">Words from those<br>who <em>trust us</em></h2>
+  <div class="testimonials-wrapper reveal">
+    <div class="testimonials-track" id="testimonialsTrack">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">I had my bridal hair done here and I cannot express how perfect it was. The team understood my vision completely and exceeded every expectation. My photos are absolutely stunning.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">P</div>
+          <div>
+            <div class="author-name">Priya Sharma</div>
+            <div class="author-role">Bride, December 2024</div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The balayage they gave me is the best I've ever had — and I've tried salons across Delhi and Mumbai. The attention to detail and the final result is something special. I drive 45 minutes just to come here.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div>
+            <div class="author-name">Ananya Verma</div>
+            <div class="author-role">Regular Client</div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Came in with severely damaged hair from years of improper coloring. After their treatment plan, my hair is healthier than it's been in a decade. The team is knowledgeable, honest, and genuinely cares.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">R</div>
+          <div>
+            <div class="author-name">Ruchika Tiwari</div>
+            <div class="author-role">Hair Repair Client</div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The keratin treatment here is the real deal. No frizz, incredible shine, and it's been four months and still going strong. The ambience is so relaxing I didn't want to leave.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div>
+            <div class="author-name">Meghna Joshi</div>
+            <div class="author-role">Keratin Client</div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="section-label reveal">Appointments</div>
+  <h2 class="section-title reveal reveal-delay-1">Reserve your<br><em>moment</em> of transformation</h2>
+  <div class="booking-container">
+    <div class="booking-info reveal">
+      <h3>Your experience begins here</h3>
+      <p>Book your appointment online in minutes. Select your preferred service, choose a time that suits you, and our team will confirm your slot and prepare everything for your arrival.</p>
+      <div class="booking-feature">
+        <div class="booking-feature-icon">◈</div>
+        <div class="booking-feature-text">Real-time availability — no double bookings, ever</div>
+      </div>
+      <div class="booking-feature">
+        <div class="booking-feature-icon">✦</div>
+        <div class="booking-feature-text">SMS & WhatsApp confirmation within minutes</div>
+      </div>
+      <div class="booking-feature">
+        <div class="booking-feature-icon">◉</div>
+        <div class="booking-feature-text">Free consultation included with every appointment</div>
+      </div>
+      <div class="booking-feature">
+        <div class="booking-feature-icon">◇</div>
+        <div class="booking-feature-text">Easy rescheduling up to 24 hours before</div>
+      </div>
+      <div style="margin-top:2.5rem">
+        <div class="section-label" style="margin-bottom:0.5rem">Opening Hours</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);line-height:2">
+          Monday – Saturday: 10:00 AM – 8:00 PM<br>
+          Sunday: 11:00 AM – 6:00 PM
+        </div>
+      </div>
+    </div>
+    <div class="booking-form reveal reveal-delay-1">
+      <h3 class="form-title">Book Appointment</h3>
+      <p class="form-sub">All fields required · Confirmation via SMS</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="bookName" placeholder="Full name" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="bookPhone" placeholder="+91 XXXXX XXXXX" autocomplete="tel">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Service</label>
+          <select id="bookService">
+            <option value="">Select a service</option>
+            <option>Precision Cut — From ₹400</option>
+            <option>Color Artistry — From ₹1,200</option>
+            <option>Keratin Treatment — From ₹3,500</option>
+            <option>Bridal Package — From ₹5,000</option>
+            <option>Scalp Ritual — From ₹800</option>
+            <option>Hair Extensions — Consultation</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="bookDate" min="">
+        </div>
+      </div>
+      <div class="time-slot-label">Select Time Slot</div>
+      <div class="time-slots" id="timeSlots">
+        <div class="time-slot" data-time="10:00">10:00</div>
+        <div class="time-slot" data-time="10:30">10:30</div>
+        <div class="time-slot" data-time="11:00">11:00</div>
+        <div class="time-slot" data-time="11:30">11:30</div>
+        <div class="time-slot" data-time="12:00">12:00</div>
+        <div class="time-slot" data-time="12:30">12:30</div>
+        <div class="time-slot booked" data-time="13:00">13:00</div>
+        <div class="time-slot" data-time="13:30">13:30</div>
+        <div class="time-slot" data-time="14:00">14:00</div>
+        <div class="time-slot booked" data-time="14:30">14:30</div>
+        <div class="time-slot" data-time="15:00">15:00</div>
+        <div class="time-slot" data-time="15:30">15:30</div>
+        <div class="time-slot" data-time="16:00">16:00</div>
+        <div class="time-slot" data-time="16:30">16:30</div>
+        <div class="time-slot booked" data-time="17:00">17:00</div>
+        <div class="time-slot" data-time="17:30">17:30</div>
+      </div>
+      <div class="form-group">
+        <label>Special Requests (optional)</label>
+        <textarea id="bookNotes" rows="3" placeholder="Allergies, reference photos, specific concerns..."></textarea>
+      </div>
+      <button class="btn-book" onclick="submitBooking()">Confirm Appointment →</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label reveal">Find Us</div>
+  <h2 class="section-title reveal reveal-delay-1">Visit our<br><em>sanctuary</em></h2>
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="contact-info-item">
+        <div class="contact-icon">◎</div>
+        <div>
+          <div class="contact-label">Address</div>
+          <div class="contact-value">INFRONT OF BHEL, Jubli Gate<br>20B NEMA COMPLEX, Indrapuri B Sector<br>Indrapuri, Bhopal, MP 462022</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">✆</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-value"><a href="tel:07415028439">074150 28439</a><br><span style="font-size:0.75rem;opacity:0.6">Tap to call directly</span></div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">◈</div>
+        <div>
+          <div class="contact-label">Hours</div>
+          <div class="contact-value">Mon–Sat: 10AM – 8PM<br>Sunday: 11AM – 6PM</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">⊕</div>
+        <div>
+          <div class="contact-label">Social</div>
+          <div class="contact-value">
+            <a href="#">@theenchantedsalon</a> on Instagram<br>
+            <a href="#">The Enchanted Salon</a> on Facebook
+          </div>
+        </div>
+      </div>
+      <div class="contact-actions">
+        <a href="tel:07415028439" class="btn-action">✆ Call Now</a>
+        <a href="https://wa.me/917415028439" class="btn-action" target="_blank">💬 WhatsApp</a>
+        <a href="https://maps.app.goo.gl/VHo4XZzuUCERJ9ZN7" class="btn-action" target="_blank">⊕ Directions</a>
+      </div>
+    </div>
+    <div class="map-embed reveal reveal-delay-1">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3666.2!2d77.4001!3d23.2320!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDEzJzU1LjIiTiA3N8KwMjQnMDAuNCJF!5e0!3m2!1sen!2sin!4v1234567890"
+        allowfullscreen="" loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">The <em>Enchanted</em></div>
+      <p class="footer-desc">Bhopal's premier destination for luxury hair care. Where craftsmanship meets artistry, and every client leaves transformed.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link" aria-label="Instagram">ig</a>
+        <a href="#" class="social-link" aria-label="Facebook">fb</a>
+        <a href="https://wa.me/917415028439" class="social-link" aria-label="WhatsApp">wa</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul class="footer-links">
+        <li><a href="#services">Precision Cuts</a></li>
+        <li><a href="#services">Color Artistry</a></li>
+        <li><a href="#services">Keratin Therapy</a></li>
+        <li><a href="#services">Bridal Packages</a></li>
+        <li><a href="#services">Scalp Rituals</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Visit</h4>
+      <ul class="footer-links">
+        <li><a href="#">Book Appointment</a></li>
+        <li><a href="https://maps.app.goo.gl/VHo4XZzuUCERJ9ZN7">Get Directions</a></li>
+        <li><a href="tel:07415028439">Call Us</a></li>
+        <li><a href="https://wa.me/917415028439">WhatsApp</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Hours</h4>
+      <ul class="footer-links">
+        <li><a href="#">Mon–Sat: 10AM–8PM</a></li>
+        <li><a href="#">Sunday: 11AM–6PM</a></li>
+        <li><a href="#">Walk-ins Welcome</a></li>
+        <li><a href="#booking">Book in Advance</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-text">© 2025 The Enchanted Salon. All rights reserved. · 20B NEMA COMPLEX, Indrapuri, Bhopal 462022</div>
+    <button class="admin-trigger" onclick="toggleAdmin()">⚙ Admin</button>
+  </div>
+</footer>
+
+<!-- FLOATING BUTTONS -->
+<div class="ai-chat-bubble">
+  <div class="ai-chat-btn" onclick="toggleAI()" title="Chat with Enchanted AI">🤖</div>
+  <div class="ai-chat-panel" id="aiPanel">
+    <div class="ai-chat-header">
+      <div class="ai-avatar">✦</div>
+      <div>
+        <div class="ai-name">Enchanted AI</div>
+        <div class="ai-status">● Online — Available 24/7</div>
+      </div>
+    </div>
+    <div class="ai-quick-btns">
+      <button class="ai-quick-btn" onclick="sendQuick('Book an appointment')">📅 Book</button>
+      <button class="ai-quick-btn" onclick="sendQuick('What services do you offer?')">💇 Services</button>
+      <button class="ai-quick-btn" onclick="sendQuick('What are your prices?')">₹ Pricing</button>
+      <button class="ai-quick-btn" onclick="sendQuick('How do I reach you?')">📍 Location</button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="msg bot">Welcome to The Enchanted Salon! ✨<br><br>I'm your 24/7 AI assistant. I can help you book appointments, answer questions about our services, or connect you with our team directly.<br><br>How can I assist you today?</div>
+    </div>
+    <div class="ai-input-row">
+      <input class="ai-input" id="aiInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendAI()">
+      <button class="ai-send" onclick="sendAI()">Send</button>
+    </div>
+  </div>
+</div>
+
+<a href="https://wa.me/917415028439?text=Hello%2C%20I%27d%20like%20to%20book%20an%20appointment%20at%20The%20Enchanted%20Salon." class="whatsapp-btn" target="_blank" title="WhatsApp us">
+  💬
+</a>
+
+<a href="tel:07415028439" class="call-float">
+  <span style="font-size:1.1rem">✆</span>
+  <span class="call-text">074150 28439</span>
+</a>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-icon">✦</div>
+    <h3 class="modal-title">Appointment Confirmed</h3>
+    <p class="modal-text" id="confirmText">Your booking has been received. We'll send a WhatsApp confirmation to your number within a few minutes. We look forward to welcoming you to The Enchanted Salon.</p>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="admin-inner">
+    <div class="admin-header">
+      <h2>⚙ Admin Dashboard</h2>
+      <button class="admin-close" onclick="toggleAdmin()">✕ Close</button>
+    </div>
+    <div class="admin-stats">
+      <div class="admin-stat">
+        <div class="admin-stat-num" id="totalBookings">0</div>
+        <div class="admin-stat-label">Total Bookings Today</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num" id="confirmedBookings">0</div>
+        <div class="admin-stat-label">Confirmed</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat-num" id="pendingBookings">0</div>
+        <div class="admin-stat-label">Pending</div>
+      </div>
+    </div>
+    <table class="bookings-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="bookingsTable">
+        <tr><td colspan="6" style="text-align:center;opacity:0.4;padding:3rem">No bookings yet today.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// THREE.JS 3D HERO BACKGROUND
+const canvas = document.getElementById('three-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
+
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+// Floating geometry
+const geometries = [];
+const goldMat = new THREE.MeshStandardMaterial({
+  color: 0xC9A96E, metalness: 0.9, roughness: 0.1, transparent: true, opacity: 0.7
+});
+const wireMat = new THREE.MeshStandardMaterial({
+  color: 0x8B6914, wireframe: true, transparent: true, opacity: 0.3
+});
+
+const shapes = [
+  new THREE.OctahedronGeometry(0.6),
+  new THREE.TetrahedronGeometry(0.5),
+  new THREE.IcosahedronGeometry(0.4),
+  new THREE.OctahedronGeometry(0.3),
+  new THREE.TetrahedronGeometry(0.35),
+  new THREE.IcosahedronGeometry(0.5),
+  new THREE.OctahedronGeometry(0.25),
+  new THREE.TetrahedronGeometry(0.45),
+];
+
+shapes.forEach((geo, i) => {
+  const mat = i % 2 === 0 ? goldMat : wireMat;
+  const mesh = new THREE.Mesh(geo, mat.clone());
+  mesh.position.set(
+    (Math.random() - 0.5) * 12,
+    (Math.random() - 0.5) * 8,
+    (Math.random() - 0.5) * 4 - 2
+  );
+  mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+  mesh.userData = {
+    rotX: (Math.random() - 0.5) * 0.005,
+    rotY: (Math.random() - 0.5) * 0.007,
+    floatOffset: Math.random() * Math.PI * 2,
+    floatSpeed: 0.3 + Math.random() * 0.5
+  };
+  scene.add(mesh);
+  geometries.push(mesh);
+});
+
+// Particle field
+const partGeo = new THREE.BufferGeometry();
+const partCount = 200;
+const positions = new Float32Array(partCount * 3);
+for (let i = 0; i < partCount * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
+partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+const partMat = new THREE.PointsMaterial({ color: 0xC9A96E, size: 0.02, transparent: true, opacity: 0.5 });
+scene.add(new THREE.Points(partGeo, partMat));
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+scene.add(ambientLight);
+const pointLight1 = new THREE.PointLight(0xC9A96E, 2, 20);
+pointLight1.position.set(5, 5, 5);
+scene.add(pointLight1);
+const pointLight2 = new THREE.PointLight(0x4a2c00, 1, 15);
+pointLight2.position.set(-5, -3, 3);
+scene.add(pointLight2);
+
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', e => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+let clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  
+  geometries.forEach(mesh => {
+    mesh.rotation.x += mesh.userData.rotX;
+    mesh.rotation.y += mesh.userData.rotY;
+    mesh.position.y += Math.sin(t * mesh.userData.floatSpeed + mesh.userData.floatOffset) * 0.002;
+  });
+  
+  camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.03;
+  camera.position.y += (mouseY * 0.3 - camera.position.y) * 0.03;
+  camera.lookAt(scene.position);
+  
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// CUSTOM CURSOR
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let rx = 0, ry = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+function animCursor() {
+  rx += (cx - rx) * 0.12; ry += (cy - ry) * 0.12;
+  dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a,button,[onclick]').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+// SCROLL EFFECTS
+const scrollBar = document.getElementById('scrollBar');
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  scrollBar.style.width = pct + '%';
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+  
+  // Reveal on scroll
+  document.querySelectorAll('.reveal').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.88) {
+      el.classList.add('visible');
+    }
+  });
+});
+
+// Trigger on load
+setTimeout(() => window.dispatchEvent(new Event('scroll')), 100);
+
+// DATE MIN
+document.getElementById('bookDate').min = new Date().toISOString().split('T')[0];
+
+// TIME SLOT SELECTION
+let selectedTime = '';
+document.querySelectorAll('.time-slot:not(.booked)').forEach(slot => {
+  slot.addEventListener('click', () => {
+    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+    slot.classList.add('selected');
+    selectedTime = slot.dataset.time;
+  });
+});
+
+// BOOKING DATA
+let bookings = JSON.parse(localStorage.getItem('enchanted_bookings') || '[]');
+const bookedSlots = {}; // key: date_time
+
+function updateBookedSlots() {
+  bookings.forEach(b => {
+    const key = b.date + '_' + b.time;
+    bookedSlots[key] = true;
+  });
+}
+updateBookedSlots();
+
+document.getElementById('bookDate').addEventListener('change', function() {
+  const date = this.value;
+  document.querySelectorAll('.time-slot').forEach(slot => {
+    const time = slot.dataset.time;
+    const key = date + '_' + time;
+    if (bookedSlots[key]) {
+      slot.classList.add('booked');
+      slot.classList.remove('selected');
+    }
+  });
+});
+
+function submitBooking() {
+  const name = document.getElementById('bookName').value.trim();
+  const phone = document.getElementById('bookPhone').value.trim();
+  const service = document.getElementById('bookService').value;
+  const date = document.getElementById('bookDate').value;
+  const notes = document.getElementById('bookNotes').value;
+
+  if (!name || !phone || !service || !date || !selectedTime) {
+    alert('Please fill in all required fields and select a time slot.');
+    return;
+  }
+
+  const booking = {
+    id: Date.now(),
+    name, phone, service, date, time: selectedTime, notes,
+    status: 'confirmed',
+    timestamp: new Date().toISOString()
+  };
+
+  bookings.push(booking);
+  localStorage.setItem('enchanted_bookings', JSON.stringify(bookings));
+  updateBookedSlots();
+
+  const key = date + '_' + selectedTime;
+  bookedSlots[key] = true;
+  document.querySelector(`.time-slot[data-time="${selectedTime}"]`)?.classList.add('booked');
+
+  document.getElementById('confirmText').textContent =
+    `Thank you, ${name}! Your ${service.split('—')[0].trim()} appointment is confirmed for ${date} at ${selectedTime}. We'll send a WhatsApp confirmation to ${phone} shortly. See you at The Enchanted!`;
+  
+  document.getElementById('confirmModal').classList.add('active');
+  
+  // Reset form
+  document.getElementById('bookName').value = '';
+  document.getElementById('bookPhone').value = '';
+  document.getElementById('bookService').value = '';
+  document.getElementById('bookDate').value = '';
+  document.getElementById('bookNotes').value = '';
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+  selectedTime = '';
+}
+
+function closeModal() {
+  document.getElementById('confirmModal').classList.remove('active');
+}
+
+function scrollToBooking() {
+  document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ADMIN PANEL
+function toggleAdmin() {
+  const panel = document.getElementById('admin-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderAdmin();
+}
+
+function renderAdmin() {
+  const allBookings = JSON.parse(localStorage.getItem('enchanted_bookings') || '[]');
+  const today = new Date().toISOString().split('T')[0];
+  const todayBookings = allBookings.filter(b => b.date === today);
+  const confirmed = todayBookings.filter(b => b.status === 'confirmed');
+  const pending = todayBookings.filter(b => b.status === 'pending');
+
+  document.getElementById('totalBookings').textContent = todayBookings.length;
+  document.getElementById('confirmedBookings').textContent = confirmed.length;
+  document.getElementById('pendingBookings').textContent = pending.length;
+
+  const tbody = document.getElementById('bookingsTable');
+  if (allBookings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;opacity:0.4;padding:3rem">No bookings yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = allBookings.reverse().map(b => `
+    <tr>
+      <td>${b.name}</td>
+      <td><a href="tel:${b.phone}" style="color:var(--gold);text-decoration:none">${b.phone}</a></td>
+      <td>${b.service?.split('—')[0]?.trim() || b.service}</td>
+      <td>${b.date}</td>
+      <td>${b.time}</td>
+      <td><span class="status-badge confirmed">✓ Confirmed</span></td>
+    </tr>
+  `).join('');
+}
+
+// MOBILE MENU
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// AI ASSISTANT
+const aiResponses = {
+  'book': 'I\'d be happy to help you book! Scroll up to our Booking section, or I can help you right now — just tell me your preferred service and date. You can also call us at 074150 28439.',
+  'appointment': 'You can book an appointment by scrolling to our Booking section on this page. Select your service, pick a date and time slot, and we\'ll confirm via WhatsApp within minutes!',
+  'price': 'Our prices start from:\n• Precision Cut: ₹400+\n• Color: ₹1,200+\n• Keratin: ₹3,500+\n• Bridal: ₹5,000+\n• Scalp Ritual: ₹800+\n\nFinal pricing depends on hair length and complexity. Call us for a free consultation!',
+  'service': 'We offer: Precision Cuts, Color Artistry (balayage, highlights, global), Keratin & Smoothing Treatments, Bridal & Event Packages, Scalp Rituals, and Hair Extensions. Each service includes a complimentary consultation!',
+  'location': 'We\'re at: 20B NEMA COMPLEX, INFRONT OF BHEL, Jubli Gate, Indrapuri B Sector, Bhopal 462022.\n\nTap the Directions button to navigate here instantly!',
+  'hour': 'Our hours:\n• Monday–Saturday: 10AM–8PM\n• Sunday: 11AM–6PM\n\nWalk-ins welcome, though booking in advance is recommended for peak times.',
+  'call': 'You can call us directly at 074150 28439. We\'re available during working hours and will answer any questions you have!',
+  'whatsapp': 'Chat with us on WhatsApp at +91 74150 28439 — tap the green button on screen or send us a message anytime!',
+  'bridal': 'Our Bridal Packages are our most sought-after service! We include trial sessions, detailed consultations, and full day-of styling. Packages start from ₹5,000. We recommend booking 2–4 weeks in advance. Call us to discuss your vision!',
+  'keratin': 'Our Keratin Treatment delivers 3–5 months of frizz-free, silky hair starting at ₹3,500. It takes 2–3 hours. We use premium professional-grade formulas. Many clients call it life-changing!',
+};
+
+function getAIResponse(msg) {
+  const lower = msg.toLowerCase();
+  for (const [key, resp] of Object.entries(aiResponses)) {
+    if (lower.includes(key)) return resp;
+  }
+  if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+    return 'Hello! Welcome to The Enchanted Salon 💫 How can I assist you today? I can help with bookings, service info, pricing, or directions!';
+  }
+  if (lower.includes('thank')) {
+    return 'You\'re so welcome! We look forward to welcoming you to The Enchanted Salon. Is there anything else I can help with?';
+  }
+  return 'Thanks for reaching out! For the most accurate answer, please call us at 074150 28439 or WhatsApp us. We\'re happy to help you directly!';
+}
+
+function appendMsg(text, sender) {
+  const msgs = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + sender;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendAI() {
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  appendMsg(msg, 'user');
+  input.value = '';
+  setTimeout(() => appendMsg(getAIResponse(msg), 'bot'), 500);
+}
+
+function sendQuick(msg) {
+  appendMsg(msg, 'user');
+  setTimeout(() => appendMsg(getAIResponse(msg), 'bot'), 400);
+}
+
+function toggleAI() {
+  document.getElementById('aiPanel').classList.toggle('open');
+}
+
+// ANALYTICS (basic)
+window.addEventListener('load', () => {
+  const visits = parseInt(localStorage.getItem('enchanted_visits') || '0') + 1;
+  localStorage.setItem('enchanted_visits', visits);
+  const bookNowClicks = document.querySelectorAll('.btn-primary, .btn-book, .nav-cta');
+  bookNowClicks.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const clicks = parseInt(localStorage.getItem('enchanted_cta_clicks') || '0') + 1;
+      localStorage.setItem('enchanted_cta_clicks', clicks);
+    });
+  });
+});
+
+// MARQUEE DUPLICATION
+const track = document.getElementById('marqueeTrack');
+track.innerHTML += track.innerHTML;
+</script>
+</body>
+</html>
